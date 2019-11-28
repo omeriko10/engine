@@ -10,7 +10,7 @@ public class Main {
         String path="C:\\Users\\omer\\Desktop\\school\\information retrieval\\tstcorp\\docexample";
         StringBuilder t=  rf.readOneFile(path);
         LinkedList<String> a= p.parse(t);
-        System.out.println(a);
+        //System.out.println(a);
 
     }
 }
