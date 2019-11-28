@@ -21,7 +21,7 @@ public class Parse {
      */
     private LinkedList<String> fromTexttoTerms(String text){
         LinkedList<String> terms=new LinkedList<>();
-        String delimiters="\\!|\\@|\\#|\\\\|\\*|\\^\\&|\\*|\\(|\\)\\+|\\=|\\{\\}|\\<|\\>|\\?|\\`|\\~|\\;|\\+|\\|\\n+|\\t+|\\s+|\\\"|\\'|\\/";
+        String delimiters="\\!|\\@|\\#|\\\\|\\*|\\^\\&|\\*|\\(|\\)\\+|\\=|\\{\\}|\\<|\\>|\\?|\\`|\\~|\\;|\\+|\\|\\n+|\\t+|\\s+|\\\"|\\'";
         String[] lines = text.split(delimiters);
         for (String term:lines) {
             if(!term.equals(""))
