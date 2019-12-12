@@ -1,19 +1,28 @@
-import com.sun.deploy.util.StringUtils;
-
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Parse {
+    private boolean toStemmer;
+    public Parse(boolean toStemmer) {
+        this.toStemmer=toStemmer;
+    }
 
-    public LinkedList<String> parse(StringBuilder doc){
-        String[] parts = doc.toString().split("\\<TEXT>|\\</TEXT>");
-        if(parts.length!=3)
-            return null;
-        String text=parts[1];
+    public HashMap<String,Integer> parse(String text){
         LinkedList<String> terms=fromTexttoTerms(text);
         parseDots(terms);
-        //parse numbers
+        parseCommas(terms);
         parseDates(terms);
-        return terms;
+        fixTerms(terms);
+        parseNumbers(terms);
+        parseEntities(terms);
+        if(toStemmer){
+            Stemmer stemer=new Stemmer();
+            for (String term:terms) {
+                term=parseStem(term,stemer);
+            }
+        }
+        HashMap<String,Integer> parserResult=countSpecificTerms(terms);
+        return parserResult;
     }
     /**
      * this function takes a text and split it into root terms
@@ -34,7 +43,7 @@ public class Parse {
      * this function takes the list of words and return it without dots except a decimal numbers
      * @param terms the list
      */
-    private void parseDots(LinkedList<String> terms){
+    public void parseDots(LinkedList<String> terms){
         termDotParser dotParser=new termDotParser();
         int i=0;
         while(i<terms.size()) {
@@ -42,6 +51,33 @@ public class Parse {
             if(curTerm.contains(".")){
                 String[] temp=dotParser.parseDots(curTerm);
                 terms.remove(i);
+                if(temp.length==0){
+                    i++;
+                    continue;
+                }
+                for (String newTerm:temp) {
+                    if(newTerm.equals(""))
+                        continue;
+                    terms.add(i,newTerm);
+                    i++;
+                }
+            }
+            else
+                i++;
+        }
+    }
+    public void parseCommas(LinkedList<String> terms){
+        termCommaParser comap=new termCommaParser();
+        int i=0;
+        while(i<terms.size()) {
+            String curTerm=terms.get(i);
+            if(curTerm.contains(",")){
+                String[] temp=comap.parsecommas(curTerm);
+                terms.remove(i);
+                if(temp.length==0){
+                    i++;
+                    continue;
+                }
                 for (String newTerm:temp) {
                     if(newTerm.equals(""))
                         continue;
@@ -75,7 +111,136 @@ public class Parse {
         }
     }
 
+    public void parseEntities(LinkedList<String> terms){
+        int i=0;
+        termsEntitieChecker checker=new termsEntitieChecker();
+        termsEntitieCreator creator=new termsEntitieCreator();
+        int listSize=terms.size()-1;
+        while(i<listSize) {
+            boolean isEntitie =checker.isEntitie(terms.get(i),terms.get(i+1));
+            if(isEntitie){
+                int j=i+1, counter=1;
+                while (j<listSize){
+                    boolean nextEntitie=checker.isEntitie(terms.get(j),terms.get(j+1));
+                    if(nextEntitie){
+                        counter++;
+                        j++;
+                    }else
+                        break;
+                }
+                int k=0;
+                String[] entities=new String[counter+1];
+                while(k<=counter){
+                    entities[k]=terms.get(i+k);
+                    k++;
+                }
+                String newName=creator.createEntitie(entities);
+                terms.addLast(newName);
+                i+=counter+1;
+                continue;
+            }
+            i++;
+        }
+    }
 
+    public  void parseNumbers(LinkedList<String> terms){
+        termsNumbers numberCreator=new termsNumbers();
+        String[] result;
+        int i=0,j;
+        while(i<terms.size()-4) {
+            result=numberCreator.convertNumber(terms.get(i),terms.get(i+1),terms.get(i+2),terms.get(i+3));
+            if(result!=null){
+                j=i;
+                terms.remove(i);
+                terms.remove(i);
+                terms.remove(i);
+                terms.remove(i);
+                for(String s:result){
+                    if(s!=null){
+                        terms.add(j,s);
+                        j++;
+                    }
+                }
+            }
+            i++;
+        }
+        i=terms.size();
+        result=numberCreator.convertNumber(terms.get(i-3),terms.get(i-2),terms.get(i-1),"");
+        if(result!=null) {
+            terms.remove(i-1);
+            terms.remove(i-2);
+            terms.remove(i-3);
+            for (int index = 0; index < 3; index++) {
+                if (result[index] != null)
+                    terms.add(result[index]);
+            }
+        }
+        i=terms.size();
+        result=numberCreator.convertNumber(terms.get(i-2),terms.get(i-1),"","");
+        if(result!=null) {
+            terms.remove(i-1);
+            terms.remove(i-2);
+            for (int index = 0; index < 2; index++) {
+                if (result[index] != null)
+                    terms.add(result[index]);
+            }
+        }
+        i=terms.size();
+        result=numberCreator.convertNumber(terms.get(i-1),"","","");
+        if(result!=null){
+            terms.remove(i-1);
+            terms.add(result[0]);
+        }
+
+    }
+
+    public void fixTerms(LinkedList<String> terms){
+        termsNumbers tn=new termsNumbers();
+        for(int i=0;i<terms.size();i++){
+            String[] result=tn.fixNumber(terms.get(i));
+            if(result!=null){
+                terms.remove(i);
+                terms.add(i,result[0]);
+                terms.add(i+1,result[1]);
+            }
+        }
+    }
+
+    public String parseStem(String term,Stemmer stemer){
+        for (int i = 0; i < term.length(); i++) {
+            if(term.charAt(i)<97||term.charAt(i)>122){
+                stemer.stem();
+                return term;
+            }
+            stemer.add(term.charAt(i));
+        }
+        stemer.stem();
+        return stemer.toString();
+    }
+
+    public void parseHypen(LinkedList<String> terms){
+        for (String term:terms) {
+            if(term.contains("-")){
+
+            }
+        }
+    }////didnt touch it
+
+
+
+    public HashMap<String,Integer> countSpecificTerms(LinkedList<String> terms){
+        HashMap<String,Integer> frecList=new HashMap<>();
+        for(String term:terms){
+            if(frecList.containsKey(term)){
+                Integer frec=frecList.get(term)+1;
+                frecList.remove(term);
+                frecList.put(term,frec);
+            }
+            else
+                frecList.put(term,1);
+        }
+        return frecList;
+    }
 
 
 

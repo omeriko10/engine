@@ -1,30 +1,18 @@
-import javafx.scene.Parent;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
+import java.io.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Main {
     public static void main(String[] args) {
-        Parse p=new Parse();
-        String path= "C:\\Users\\omer\\Desktop\\school\\information retrieval\\corpus";
-        String[] directories= getAllDirs(path);
-        for(int i=0;i<100;i++){
-            String sp=path + "\\" + directories[i];
-            File dir =new File(sp);
-            System.out.println(dir.listFiles());
-        }
+        Indexer ind=new Indexer(false);
+        ind.index("C://Users//omer//Desktop//example");
     }
-    public static String[] getAllDirs(String path){
-        File file = new File(path);
-        String[] directories = file.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File current, String name) {
-                return new File(current, name).isDirectory();
-            }
-        });
-        return directories;
-    }
-
 }
+/*Reader r=new Reader();
+        StringBuilder s=r.readOneFile(new File("C://Users//omer//Desktop//example//FB396001//FB396001"));
+        LinkedList<StringBuilder> slist=r.fromFiletoDocs(s);
+        StringBuilder oneDoc=slist.getFirst();
+        String text=r.fromDoctoText(oneDoc);
+        Parse p=new Parse(false);
+        HashMap<String,Integer> h=p.parse(text);*/

@@ -4,7 +4,7 @@
 public class termDotParser {
     public String[] parseDots(String term){
         String[] parts= term.split("\\.");
-        if(parts.length==1)
+        if(parts.length==1||parts.length==0)
             return parts;
         if(parts.length>2)
             return parts;
