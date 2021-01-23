@@ -19,4 +19,4 @@ Functionality:
 
 And more.
 
-The engine is measured by the running time of the presser phase and the retrieval results.
+The search engine is measured by the running time of the presser phase and the retrieval results.
