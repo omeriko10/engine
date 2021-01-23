@@ -18,7 +18,6 @@ Functionality:
 
 -Relative document ranking with bm25.
 
-
 And more.
 
 The search engine is measured by the running time of the parser phase and the retrieval results.
