@@ -6,8 +6,7 @@ The search engine has a convenient user interface.
 
 The search engine allows you to search by keywords, semantic words, complete sentences and more.
 
-The engine retrieves results by weighting the importance of the words in the document, words with similar meanings, the placement of the words in the document, ignoring stop words 
-and more.
+The engine retrieves results by weighting the importance of the words in the document, words with similar meanings, the placement of the words in the document, ignoring stop words and more.
 
 Functionality:
 
@@ -19,4 +18,4 @@ Functionality:
 
 And more.
 
-The search engine is measured by the running time of the presser phase and the retrieval results.
+The search engine is measured by the running time of the parser phase and the retrieval results.
