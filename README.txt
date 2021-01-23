@@ -13,7 +13,7 @@ Functionality:
 
 -Reading the documents.
 
-- Presser documents: words, numbers, special letters and more.
+- Parser documents: words, numbers, special letters and more.
 
 -Word Ranking.
 
