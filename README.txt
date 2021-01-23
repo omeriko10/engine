@@ -14,7 +14,10 @@ Functionality:
 
 - Parser documents: words, numbers, special letters and more.
 
--Word Ranking.
+-Word Ranking with tf idf.
+
+-Relative document ranking with bm25.
+
 
 And more.
 
