@@ -16,7 +16,7 @@ Functionality:
 
 -Word Ranking with tf idf.
 
--Relative document ranking with bm25.
+-Relevant document ranking with bm25.
 
 And more.
 
