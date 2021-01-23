@@ -1,6 +1,5 @@
 The application was created by Gal Atedgi and Omer Reichstein.
 
-
 This application is a document based search engine.
 
 The search engine has a convenient user interface.
