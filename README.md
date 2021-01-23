@@ -10,13 +10,13 @@ The engine retrieves results by weighting the importance of the words in the doc
 
 Functionality:
 
--Reading the documents.
+* Reading the documents.
 
-- Parser documents: words, numbers, special letters and more.
+* Parser documents: words, numbers, special letters and more.
 
--Word Ranking with tf idf.
+* Word Ranking with tf idf.
 
--Relevant document ranking with bm25.
+* Relevant document ranking with bm25.
 
 And more.
 
